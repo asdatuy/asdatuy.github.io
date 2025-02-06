@@ -1,0 +1,744 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Zookkeeper概述 架构 Leader(Master)当一个Server获得一半以上的票数时 它会成为Leader 所以 Zookkeepr集群的Server数一般为奇数  特性 读操作 写操作  Client向Leader发出写请求。  Leader将数据写入到本节点，并将数据发送到所有的Follower节点；  等待Follower节点返回；  当Leader接收到一半以上节点(包含自己">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2025/02/06/Comment/BigData/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Zookkeeper概述 架构 Leader(Master)当一个Server获得一半以上的票数时 它会成为Leader 所以 Zookkeepr集群的Server数一般为奇数  特性 读操作 写操作  Client向Leader发出写请求。  Leader将数据写入到本节点，并将数据发送到所有的Follower节点；  等待Follower节点返回；  当Leader接收到一半以上节点(包含自己">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/Pic/image-20230906213848300.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230906214032674.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230906214610098.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230906215028868.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230906215651622.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230907145615551.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230906170802290.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230906185500899.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230906205555514.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230906211229513.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230906212332735.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230908165329405.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230908165517100.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230908165626017.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230908165833957.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230917165445505.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230917170650666.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230917170947344.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230917171114046.png">
+<meta property="og:image" content="http://example.com/Pic/image-20230917165709364.png">
+<meta property="article:published_time" content="2025-02-06T07:10:04.874Z">
+<meta property="article:modified_time" content="2025-01-11T08:41:49.044Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/Pic/image-20230906213848300.png">
+  
+  
+  
+  <title>Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-06 15:10" pubdate>
+          2025年2月6日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Zookkeeper"><a href="#Zookkeeper" class="headerlink" title="Zookkeeper"></a>Zookkeeper</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p><img src="/../Pic/image-20230906213848300.png" srcset="/img/loading.gif" lazyload alt="image-20230906213848300"></p>
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p><img src="/../Pic/image-20230906214032674.png" srcset="/img/loading.gif" lazyload alt="image-20230906214032674"></p>
+<h4 id="Leader-Master"><a href="#Leader-Master" class="headerlink" title="Leader(Master)"></a>Leader(Master)</h4><p>当一个Server获得一半以上的票数时 它会成为Leader 所以 Zookkeepr集群的Server数一般为奇数 </p>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><p><img src="/../Pic/image-20230906214610098.png" srcset="/img/loading.gif" lazyload alt="image-20230906214610098"></p>
+<h3 id="读操作"><a href="#读操作" class="headerlink" title="读操作"></a>读操作</h3><p><img src="/../Pic/image-20230906215028868.png" srcset="/img/loading.gif" lazyload alt="image-20230906215028868"></p>
+<h3 id="写操作"><a href="#写操作" class="headerlink" title="写操作"></a>写操作</h3><p><img src="/../Pic/image-20230906215651622.png" srcset="/img/loading.gif" lazyload alt="image-20230906215651622"></p>
+<ol>
+<li><p>Client向Leader发出写请求。</p>
+</li>
+<li><p>Leader将数据写入到本节点，并将数据发送到所有的Follower节点；</p>
+</li>
+<li><p>等待Follower节点返回；</p>
+</li>
+<li><p>当Leader接收到一半以上节点(包含自己)返回写成功的信息之后，返回写入成功消息给client;</p>
+</li>
+</ol>
+<h3 id="一些命令"><a href="#一些命令" class="headerlink" title="一些命令"></a>一些命令</h3><p><img src="/../Pic/image-20230907145615551.png" srcset="/img/loading.gif" lazyload alt="	"></p>
+<h2 id="实操"><a href="#实操" class="headerlink" title="实操"></a>实操</h2><h3 id="基本集群搭建"><a href="#基本集群搭建" class="headerlink" title="基本集群搭建"></a>基本集群搭建</h3><blockquote>
+<p>因为推荐使用奇数节点 所以有三台主机 </p>
+<ol>
+<li>Host1 192.168.10.10</li>
+<li>Host2 192.168.10.20</li>
+<li>Host3 192.168.10.30</li>
+</ol>
+<p>自行下载zookkeeper文件和java运行环境</p>
+</blockquote>
+<h4 id="1-配置文件"><a href="#1-配置文件" class="headerlink" title="1. 配置文件"></a>1. 配置文件</h4><h5 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">root@Host1 apache-zookeeper-3.9.0-bin]# <span class="hljs-built_in">pwd</span> <br>/root/SoftWare/apache-zookeeper-3.9.0-bin<br>[root@Host1 apache-zookeeper-3.9.0-bin]# <span class="hljs-built_in">ls</span> <br>bin  conf  docs  lib  LICENSE.txt  logs  myid  NOTICE.txt  README.md  README_packaging.md<br></code></pre></td></tr></table></figure>
+
+<h5 id="编辑每个主机的conf-zoo-cfg"><a href="#编辑每个主机的conf-zoo-cfg" class="headerlink" title="编辑每个主机的conf&#x2F;zoo.cfg"></a>编辑每个主机的conf&#x2F;zoo.cfg</h5><blockquote>
+<p>可以从zoo.sample.cfg 参考复制 主要配置两个参数</p>
+<ol>
+<li>dataDir&#x3D;               ##此目录必须提前创建 如果需要集群设置 则须在该路径下创建myid</li>
+<li>集群主机配置</li>
+</ol>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs json">tickTime=<span class="hljs-number">2000</span><br>initLimit=<span class="hljs-number">10</span><br>syncLimit=<span class="hljs-number">5</span><br>dataDir=/root/SoftWare/apache-zookeeper<span class="hljs-number">-3.9</span><span class="hljs-number">.0</span>-bin/myid<br>clientPort=<span class="hljs-number">2181</span><br>################################<br>server<span class="hljs-number">.1</span>=<span class="hljs-number">192.168</span><span class="hljs-number">.10</span><span class="hljs-number">.10</span><span class="hljs-punctuation">:</span><span class="hljs-number">2888</span><span class="hljs-punctuation">:</span><span class="hljs-number">3888</span><br>server<span class="hljs-number">.2</span>=<span class="hljs-number">192.168</span><span class="hljs-number">.10</span><span class="hljs-number">.20</span><span class="hljs-punctuation">:</span><span class="hljs-number">2888</span><span class="hljs-punctuation">:</span><span class="hljs-number">3888</span><br>server<span class="hljs-number">.3</span>=<span class="hljs-number">192.168</span><span class="hljs-number">.10</span><span class="hljs-number">.30</span><span class="hljs-punctuation">:</span><span class="hljs-number">2888</span><span class="hljs-punctuation">:</span><span class="hljs-number">3888</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="编辑myid文件-目录在上面配置文件定义"><a href="#编辑myid文件-目录在上面配置文件定义" class="headerlink" title="编辑myid文件 目录在上面配置文件定义"></a>编辑myid文件 目录在上面配置文件定义</h5><blockquote>
+<p>注意 配置文件定义了主机server.1&#x3D;192.168.10.10 所以 server1的myid文件的内容为1 其他主机依次填写</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@Host1 apache-zookeeper-3.9.0-bin]# <span class="hljs-built_in">ls</span> /root/SoftWare/apache-zookeeper-3.9.0-bin/myid<br>myid<br>[root@Host1 apache-zookeeper-3.9.0-bin]# <span class="hljs-built_in">cat</span> /root/SoftWare/apache-zookeeper-3.9.0-bin/myid/myid <br>1<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@Host2 apache-zookeeper-3.9.0-bin]# <span class="hljs-built_in">cat</span> myid/myid <br>2<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@Host3 apache-zookeeper-3.9.0-bin]# <span class="hljs-built_in">cat</span> myid/myid <br>3<br></code></pre></td></tr></table></figure>
+
+<h5 id="启动服务器"><a href="#启动服务器" class="headerlink" title="启动服务器"></a>启动服务器</h5><p>在bin有相应的二进制执行文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@Host1 apache-zookeeper-3.9.0-bin]# <span class="hljs-built_in">ls</span> ./bin/<br>README.txt    zkEnv.sh                zkSnapshotComparer.sh                  zkTxnLogToolkit.cmd<br>zkCleanup.sh  zkServer.cmd            zkSnapshotRecursiveSummaryToolkit.cmd  zkTxnLogToolkit.sh<br>zkCli.cmd     zkServer-initialize.sh  zkSnapshotRecursiveSummaryToolkit.sh<br>zkCli.sh      zkServer.sh             zkSnapShotToolkit.cmd<br>zkEnv.cmd     zkSnapshotComparer.cmd  zkSnapShotToolkit.sh<br></code></pre></td></tr></table></figure>
+
+<p>每个服务器执行 zkServer.sh start|stop|restart</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@Host1 apache-zookeeper-3.9.0-bin]# ./bin/zkServer.sh start<br>/usr/bin/java<br>ZooKeeper JMX enabled by default<br>Using config: /root/SoftWare/apache-zookeeper-3.9.0-bin/bin/../conf/zoo.cfg<br>Starting zookeeper ... STARTED<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@Host2 apache-zookeeper-3.9.0-bin]# ./bin/zkServer.sh start<br>bash: warning: setlocale: LC_ALL: cannot change locale (zh_CN.UTF-8)<br>/usr/bin/java<br>ZooKeeper JMX enabled by default<br>Using config: /root/SoftWare/apache-zookeeper-3.9.0-bin/bin/../conf/zoo.cfg<br>Starting zookeeper ... STARTED<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@Host3 apache-zookeeper-3.9.0-bin]# ./bin/zkServer.sh start<br>bash: warning: setlocale: LC_ALL: cannot change locale (zh_CN.UTF-8)<br>/usr/bin/java<br>ZooKeeper JMX enabled by default<br>Using config: /root/SoftWare/apache-zookeeper-3.9.0-bin/bin/../conf/zoo.cfg<br>Starting zookeeper ... STARTED<br></code></pre></td></tr></table></figure>
+
+<p>可以执行bin下的 zkSever.sh status 查看状态 这里利用ansible执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash">shanwen@Shanwen:~/ansible$ ansible all -m shell -a <span class="hljs-string">&quot;/root/SoftWare/apache-zookeeper-3.9.0-bin/bin/zkServer.sh status&quot;</span><br>[WARNING]: Found both group and host with same name: Host1<br>[WARNING]: Found both group and host with same name: Host2<br>[WARNING]: Found both group and host with same name: Host3<br>Host2 | CHANGED | rc=0 &gt;&gt;<br>/usr/bin/java<br>Client port found: 2181. Client address: localhost. Client SSL: <span class="hljs-literal">false</span>.<br>Mode: leaderZooKeeper JMX enabled by default<br>Using config: /root/SoftWare/apache-zookeeper-3.9.0-bin/bin/../conf/zoo.cfg<br>Host3 | CHANGED | rc=0 &gt;&gt;<br>/usr/bin/java<br>Client port found: 2181. Client address: localhost. Client SSL: <span class="hljs-literal">false</span>.<br>Mode: followerZooKeeper JMX enabled by default<br>Using config: /root/SoftWare/apache-zookeeper-3.9.0-bin/bin/../conf/zoo.cfg<br>Host1 | CHANGED | rc=0 &gt;&gt;<br>/usr/bin/java<br>Client port found: 2181. Client address: localhost. Client SSL: <span class="hljs-literal">false</span>.<br>Mode: followerZooKeeper JMX enabled by default<br>Using config: /root/SoftWare/apache-zookeeper-3.9.0-bin/bin/../conf/zoo.cfg<br></code></pre></td></tr></table></figure>
+
+<p>可以看到 Host2 成为了Leader 也就是master节点</p>
+<h5 id="客户端连接"><a href="#客户端连接" class="headerlink" title="客户端连接"></a>客户端连接</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs bash">shanwen@Shanwen:~/ansible$ ./SoftWare/zk/bin/zkCli.sh -server 192.168.10.10:2181     <span class="hljs-comment">## 连接那个客户端都行的 并不一定是leader</span><br>[zk: 192.168.10.10:2181(CONNECTED) 4] get /zookeeper/config <br>server.1=192.168.10.10:2888:3888:participant<br>server.2=192.168.10.20:2888:3888:participant<br>server.3=192.168.10.30:2888:3888:participant<br>version=0<br>[zk: 192.168.10.10:2181(CONNECTED) 5] create /testData<br>Created /testData<br>[zk: 192.168.10.10:2181(CONNECTED) 6] <span class="hljs-built_in">set</span> /testData TESTdATA<br>[zk: 192.168.10.10:2181(CONNECTED) 7] get /testData <br>TESTdATA<br>[zk: 192.168.10.10:2181(CONNECTED) 8] create /testData/testData2<br>Created /testData/testData2<br>[zk: 192.168.10.10:2181(CONNECTED) 9] del<br>delete      deleteall   delquota    <br>[zk: 192.168.10.10:2181(CONNECTED) 9] delete<br>delete      deleteall   <br>[zk: 192.168.10.10:2181(CONNECTED) 9] delete /testData <br>Node not empty: /testData<br>[zk: 192.168.10.10:2181(CONNECTED) 10] deleteall /testData <br>[zk: 192.168.10.10:2181(CONNECTED) 11] <br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="HDFS"><a href="#HDFS" class="headerlink" title="HDFS"></a>HDFS</h1><h3 id="单点HDFS"><a href="#单点HDFS" class="headerlink" title="单点HDFS"></a>单点HDFS</h3><h4 id="架构-1"><a href="#架构-1" class="headerlink" title="架构"></a>架构<img src="/../Pic/image-20230906170802290.png" srcset="/img/loading.gif" lazyload></h4><p><img src="/../Pic/image-20230906185500899.png" srcset="/img/loading.gif" lazyload alt="image-20230906185500899"></p>
+<h4 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h4><p>在<strong>HDFS1.0</strong>中 名称节点只有一个 在<strong>2.0</strong>中实现了高可用 采用了<strong>主备节点</strong>	<img src="/../Pic/image-20230906205555514.png" srcset="/img/loading.gif" lazyload alt="image-20230906205555514"></p>
+<h3 id="HDFS联邦"><a href="#HDFS联邦" class="headerlink" title="HDFS联邦"></a>HDFS联邦</h3><p>利用多个HDFS的NameNode获取更多的数据存储 也可以在多用户访问时 降低了单NameNode的负载 利用NameSpace实现隔<img src="/../Pic/image-20230906211229513.png" srcset="/img/loading.gif" lazyload alt="image-20230906211229513"></p>
+<h3 id="HDFS读写步骤"><a href="#HDFS读写步骤" class="headerlink" title="HDFS读写步骤"></a>HDFS读写步骤</h3><ol>
+<li><p>客户端对分布式文件系统发送请求 在NameNode中查询元数据 找到底层对应的块设备 </p>
+</li>
+<li><p>然后通过FSDateOutputStream对底层的DataNode发送写入请求 </p>
+</li>
+<li><p>因为存在副本机制 在第一个DataNode写入到40%时 这个Node会把数据传给第二个DateNode 第二个传第三个</p>
+</li>
+<li><p>最后一个DateNode接受完数据后 发送确认包给客户端 确认收到数据  客户端发送命令 关闭文件</p>
+</li>
+</ol>
+<p><img src="/../Pic/image-20230906212332735.png" srcset="/img/loading.gif" lazyload alt="image-20230906212332735"></p>
+<h4 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h4><h4 id="集群关闭SElinux-Firewalld、设置ssh免密"><a href="#集群关闭SElinux-Firewalld、设置ssh免密" class="headerlink" title="集群关闭SElinux Firewalld、设置ssh免密"></a>集群关闭SElinux Firewalld、设置ssh免密</h4><blockquote>
+<p>不做赘述 不会重开</p>
+</blockquote>
+<h4 id="配置HDFS"><a href="#配置HDFS" class="headerlink" title="配置HDFS"></a>配置HDFS</h4><h5 id="配置环境变量JAVA-HOME"><a href="#配置环境变量JAVA-HOME" class="headerlink" title="配置环境变量JAVA_HOME"></a>配置环境变量JAVA_HOME</h5><ol>
+<li><p>&#x2F;etc&#x2F;profile</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@Host1 ~]# <span class="hljs-built_in">tail</span> -n 1 /etc/profile<br><span class="hljs-built_in">export</span> JAVA_HOME=/root/jdk1.8.0_381/<br><span class="hljs-built_in">export</span> PATH=<span class="hljs-variable">$PATH</span>:<span class="hljs-variable">$&#123;JAVA_HOME&#125;</span>/bin<br>[root@Host1 ~]# <span class="hljs-built_in">ls</span> /root/jdk1.8.0_381/<br>bin             jmc.txt        lib          release<br>COPYRIGHT       jre            LICENSE      src.zip<br>include         jvisualvm.txt  man          THIRDPARTYLICENSEREADME-JAVAFX.txt<br>javafx-src.zip  legal          README.html  THIRDPARTYLICENSEREADME.txt<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>hadoop文件夹下的&#x2F;etc&#x2F;hadoop.env.sh</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@Host1 ~]# <span class="hljs-built_in">ls</span> /root/SoftWare/hadoop-3.3.6/etc/hadoop/<br>capacity-scheduler.xml            httpfs-env.sh               mapred-site.xml<br>configuration.xsl                 httpfs-log4j.properties     shellprofile.d<br>container-executor.cfg            httpfs-site.xml             ssl-client.xml.example<br>core-site.xml                     kms-acls.xml                ssl-server.xml.example<br>hadoop-env.sh                     kms-env.sh                  user_ec_policies.xml.template<br>hadoop-metrics2.properties        kms-log4j.properties        workers<br>hadoop-policy.xml                 kms-site.xml                yarn-env.sh<br>hadoop-user-functions.sh.example  log4j.properties            yarnservice-log4j.properties<br>hdfs-rbf-site.xml                 mapred-env.sh               yarn-site.xml<br>hdfs-site.xml                     mapred-queues.xml.template<br><span class="hljs-comment">#####文件修改内容</span><br><span class="hljs-built_in">export</span> JAVA_HOME=/root/jdk1.8.0_381/<br><span class="hljs-built_in">export</span> HADOOP_CONF_DIR=/root/SoftWare/hadoop-3.3.6/etc/hadoop<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="查看版本"><a href="#查看版本" class="headerlink" title="查看版本"></a>查看版本</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@Host1 ~]# hadoop version<br>Hadoop 3.3.6<br>Source code repository https://github.com/apache/hadoop.git -r 1be78238728da9266a4f88195058f08fd012bf9c<br>Compiled by ubuntu on 2023-06-18T08:22Z<br>Compiled on platform linux-x86_64<br>Compiled with protoc 3.7.1<br>From <span class="hljs-built_in">source</span> with checksum 5652179ad55f76cb287d9c633bb53bbd<br>This <span class="hljs-built_in">command</span> was run using /root/SoftWare/hadoop-3.3.6/share/hadoop/common/hadoop-common-3.3.6.jar<br></code></pre></td></tr></table></figure>
+
+<h5 id="全部操作步骤"><a href="#全部操作步骤" class="headerlink" title="全部操作步骤"></a>全部操作步骤</h5><h1 id="HIVE"><a href="#HIVE" class="headerlink" title="HIVE"></a>HIVE</h1><p>大数据存储仓库</p>
+<h2 id="HIVE运行流程"><a href="#HIVE运行流程" class="headerlink" title="HIVE运行流程"></a>HIVE运行流程</h2><p><img src="/../Pic/image-20230908165329405.png" srcset="/img/loading.gif" lazyload alt="image-20230908165329405"></p>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p><img src="/../Pic/image-20230908165517100.png" srcset="/img/loading.gif" lazyload alt="image-20230908165517100"></p>
+<p><img src="/../Pic/image-20230908165626017.png" srcset="/img/loading.gif" lazyload alt="image-20230908165626017"></p>
+<h2 id="一些函数"><a href="#一些函数" class="headerlink" title="一些函数"></a>一些函数</h2><p><img src="/../Pic/image-20230908165833957.png" srcset="/img/loading.gif" lazyload alt="image-20230908165833957"></p>
+<h1 id="MapReduce分布式计算框架"><a href="#MapReduce分布式计算框架" class="headerlink" title="MapReduce分布式计算框架"></a>MapReduce分布式计算框架</h1><h2 id="MapReduce-概念"><a href="#MapReduce-概念" class="headerlink" title="MapReduce 概念"></a>MapReduce 概念</h2><p><img src="/../Pic/image-20230917165445505.png" srcset="/img/loading.gif" lazyload alt="image-20230917165445505"></p>
+<h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><p>Map：对杂乱无章的数据 对他们的特征 进行解析和归类 提取出Key&#x3D;Value</p>
+<p>Reduce：针对Map处理的数据 进行下一步处理</p>
+<p>将HDFS中的数据经过分片 发送给Map处理 经过洗牌 变得有规律 发送给Reduce() 最后输出结果</p>
+<p><img src="/../Pic/image-20230917170650666.png" srcset="/img/loading.gif" lazyload alt="image-20230917170650666"></p>
+<p><img src="/../Pic/image-20230917170947344.png" srcset="/img/loading.gif" lazyload alt="image-20230917170947344"></p>
+<p><img src="/../Pic/image-20230917171114046.png" srcset="/img/loading.gif" lazyload alt="image-20230917171114046"></p>
+<h1 id="Yarn资源调度控制器"><a href="#Yarn资源调度控制器" class="headerlink" title="Yarn资源调度控制器"></a>Yarn资源调度控制器</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><img src="/../Pic/image-20230917165709364.png" srcset="/img/loading.gif" lazyload alt="image-20230917165709364"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>http://example.com/2025/02/06/Comment/BigData/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/06/Comment/Banlance/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/06/Comment/Contailer/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
