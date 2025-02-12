@@ -19,22 +19,22 @@
   <meta name="author" content="Wakin">
   <meta name="keywords" content="">
   
-    <meta name="description" content="通过内核裁剪删除不需要的驱动，提高安全性，减少内存的使用和磁盘的占用。 获取内核源码The Linux Kernel Archives 123456789101112131415161718&gt; tar Jxf linux-6.13.1.tar.xz&gt; lslinux-6.13.1  linux-6.13.1.tar.xz&gt; cd linux-6.13.1&#x2F;&gt; lsarch">
+    <meta name="description" content="安装参考 Gentoo 安装 – Houge’s Madness Blog 关于Gentoo Linux的安装 - Gentoo Wiki  Zram该笔记本配置为i5Gen9，内存16G；配置Zram比swap体验更好。 12345678910Wakin ~ &gt; cat &#x2F;etc&#x2F;systemd&#x2F;zram-generator.conf[zram0]zram-size &#x3D; ram&#x2F;2comp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kernelBuild">
-<meta property="og:url" content="http://example.com/2025/02/06/kernelBuild/index.html">
+<meta property="og:title" content="Gentoo体验">
+<meta property="og:url" content="http://example.com/2025/02/08/Gentoo%E7%9A%84%E4%B8%AA%E4%BA%BA%E4%BC%98%E5%8C%96/index.html">
 <meta property="og:site_name" content="Wakin">
-<meta property="og:description" content="通过内核裁剪删除不需要的驱动，提高安全性，减少内存的使用和磁盘的占用。 获取内核源码The Linux Kernel Archives 123456789101112131415161718&gt; tar Jxf linux-6.13.1.tar.xz&gt; lslinux-6.13.1  linux-6.13.1.tar.xz&gt; cd linux-6.13.1&#x2F;&gt; lsarch">
+<meta property="og:description" content="安装参考 Gentoo 安装 – Houge’s Madness Blog 关于Gentoo Linux的安装 - Gentoo Wiki  Zram该笔记本配置为i5Gen9，内存16G；配置Zram比swap体验更好。 12345678910Wakin ~ &gt; cat &#x2F;etc&#x2F;systemd&#x2F;zram-generator.conf[zram0]zram-size &#x3D; ram&#x2F;2comp">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-02-06T10:43:37.000Z">
-<meta property="article:modified_time" content="2025-02-06T13:02:19.526Z">
+<meta property="article:published_time" content="2025-02-08T10:14:18.000Z">
+<meta property="article:modified_time" content="2025-02-12T16:29:06.607Z">
 <meta property="article:author" content="Wakin">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>kernelBuild - Wakin</title>
+  <title>Gentoo体验 - Wakin</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -176,7 +176,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="kernelBuild"></span>
+            <span id="subtitle" data-typed-text="Gentoo体验"></span>
           
         </div>
 
@@ -187,8 +187,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-06 18:43" pubdate>
-          2025年2月6日 晚上
+        <time datetime="2025-02-08 18:14" pubdate>
+          2025年2月8日 晚上
         </time>
       </span>
     
@@ -199,7 +199,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          284 字
+          499 字
         
       </span>
     
@@ -210,7 +210,7 @@
         
         
         
-          3 分钟
+          5 分钟
         
       </span>
     
@@ -247,16 +247,21 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">kernelBuild</h1>
+            <h1 id="seo-header">Gentoo体验</h1>
             
             
               <div class="markdown-body">
                 
-                <p>通过<strong>内核裁剪删除不需要的驱动，提高安全性，减少内存的使用和磁盘的占用</strong>。</p>
-<h1 id="获取内核源码"><a href="#获取内核源码" class="headerlink" title="获取内核源码"></a>获取内核源码</h1><p><a target="_blank" rel="noopener" href="https://www.kernel.org/">The Linux Kernel Archives</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs bash">&gt; tar Jxf linux-6.13.1.tar.xz<br><br>&gt; <span class="hljs-built_in">ls</span><br>linux-6.13.1  linux-6.13.1.tar.xz<br><br>&gt; <span class="hljs-built_in">cd</span> linux-6.13.1/<br><br>&gt; <span class="hljs-built_in">ls</span><br><span class="hljs-built_in">arch</span>   COPYING  Documentation  include   ipc      kernel    MAINTAINERS  net     samples   sound  virt<br>block  CREDITS  drivers        init      Kbuild   lib       Makefile     README  scripts   tools<br>certs  crypto   fs             io_uring  Kconfig  LICENSES  mm           rust    security  usr<br><br><span class="hljs-comment">## 获取当前内核运行的配置</span><br>&gt; <span class="hljs-built_in">cp</span> /boot/config-6.6.0-73.0.0.77.oe2403sp1.x86_64 .config<br><span class="hljs-comment">## 编译软件支持</span><br>&gt; dnf install -y rpm-build openssl-devel bc rsync gcc gcc-c++ flex bison m4 elfutils-libelf-devel ncurses-devel ncurses<br><br>&gt; make nconfig<br></code></pre></td></tr></table></figure>
-<h1 id="根据需求选择编译选项"><a href="#根据需求选择编译选项" class="headerlink" title="根据需求选择编译选项"></a>根据需求选择编译选项</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs bash">&gt; make -j9<br><br>&gt; make modules_install<br><br>&gt; make install<br><br><span class="hljs-comment">## 配置initramfs 若没有就使用 dracut生成 注意压缩格式 应该和内核配置的一样</span><br><span class="hljs-comment">#&gt; dracut --kver 6.13.1 --force --lz4  </span><br>&gt; <span class="hljs-built_in">ls</span> /boot/ | grep 6.13<br>initramfs-6.13.1.img<br>System.map-6.13.1<br>vmlinuz-6.13.1<br><br><span class="hljs-comment">## 配置Grub启动项</span><br>&gt; grub2-mkconfig -o /boot/grub2/grub.cfg<br>Generating grub configuration file ...<br>Found linux image: /boot/vmlinuz-6.13.1<br>Found initrd image: /boot/initramfs-6.13.1.img<br>Found linux image: /boot/vmlinuz-6.6.0-73.0.0.77.oe2403sp1.x86_64<br>Found initrd image: /boot/initramfs-6.6.0-73.0.0.77.oe2403sp1.x86_64.img<br>Found linux image: /boot/vmlinuz-6.6.0-72.0.0.76.oe2403sp1.x86_64<br>Found initrd image: /boot/initramfs-6.6.0-72.0.0.76.oe2403sp1.x86_64.img<br>Found linux image: /boot/vmlinuz-0-rescue-ad2ea7cdf109462daee20a8c371d9986<br>Found initrd image: /boot/initramfs-0-rescue-ad2ea7cdf109462daee20a8c371d9986.img<br>Found linux image: /boot/vmlinuz-0-rescue-957c5a914289429ea62fdb93949f89d9<br>Found initrd image: /boot/initramfs-0-rescue-957c5a914289429ea62fdb93949f89d9.img<br>Adding boot menu entry <span class="hljs-keyword">for</span> UEFI Firmware Settings ...<br><span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure>
-<h1 id="重启加载新内核"><a href="#重启加载新内核" class="headerlink" title="重启加载新内核"></a>重启加载新内核</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">&gt; <span class="hljs-built_in">uname</span> -a<br>Linux host1 6.13.1 <span class="hljs-comment">#3 SMP Thu Feb  6 20:15:31 CST 2025 x86_64 x86_64 x86_64 GNU/Linux</span><br></code></pre></td></tr></table></figure>
+                <h1 id="安装参考"><a href="#安装参考" class="headerlink" title="安装参考"></a>安装参考</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://litterhougelangley.club/blog/2021/05/21/gentoo/">Gentoo 安装 – Houge’s Madness Blog</a></li>
+<li><a target="_blank" rel="noopener" href="https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/About/zh-cn">关于Gentoo Linux的安装 - Gentoo Wiki</a></li>
+</ul>
+<h1 id="Zram"><a href="#Zram" class="headerlink" title="Zram"></a>Zram</h1><p>该笔记本配置为i5Gen9，内存16G；配置<a target="_blank" rel="noopener" href="https://wiki.gentoo.org/wiki/Zram#Using_systemd_zram-generator">Zram</a>比swap体验更好。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">Wakin ~ &gt; <span class="hljs-built_in">cat</span> /etc/systemd/zram-generator.conf<br>[zram0]<br>zram-size = ram/2<br>compression-algorithm = lz4<br>swap-priority = 100<br>fs-type = swap<br><br>Wakin ~ &gt; <span class="hljs-built_in">echo</span> 150 | <span class="hljs-built_in">sudo</span> <span class="hljs-built_in">tee</span> /proc/sys/vm/swappiness<br><br>Wakin ~ &gt; sysctl -p<br></code></pre></td></tr></table></figure>
+<h1 id="CachyOS相关的优化"><a href="#CachyOS相关的优化" class="headerlink" title="CachyOS相关的优化"></a>CachyOS相关的优化</h1><p>在<a target="_blank" rel="noopener" href="https://github.com/CachyOS/CachyOS-Settings/blob/master/README.md">CachyOS-Settings</a>偷的一些udev规则，移动到<code>/usr/lib/udev/rules.d</code>这只是其中之一。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs bash">30-zram.rules<br>TEST!=<span class="hljs-string">&quot;/dev/zram0&quot;</span>, GOTO=<span class="hljs-string">&quot;zram_end&quot;</span><br>SYSCTL&#123;vm.swappiness&#125;=<span class="hljs-string">&quot;150&quot;</span><br>LABEL=<span class="hljs-string">&quot;zram_end&quot;</span><br><br><br>40-hpet-permissions.rules<br>KERNEL==<span class="hljs-string">&quot;rtc0&quot;</span>, GROUP=<span class="hljs-string">&quot;audio&quot;</span><br>KERNEL==<span class="hljs-string">&quot;hpet&quot;</span>, GROUP=<span class="hljs-string">&quot;audio&quot;</span><br><br><br>50-sata.rules<br>ACTION==<span class="hljs-string">&quot;add&quot;</span>, SUBSYSTEM==<span class="hljs-string">&quot;scsi_host&quot;</span>, KERNEL==<span class="hljs-string">&quot;host*&quot;</span>, \<br>    ATTR&#123;link_power_management_policy&#125;==<span class="hljs-string">&quot;*&quot;</span>, \<br>    ATTR&#123;link_power_management_policy&#125;=<span class="hljs-string">&quot;max_performance&quot;</span><br><br><br>69-hdparm.rules<br>ACTION==<span class="hljs-string">&quot;add|change&quot;</span>, KERNEL==<span class="hljs-string">&quot;sd[a-z]&quot;</span>, ATTR&#123;queue/rotational&#125;==<span class="hljs-string">&quot;1&quot;</span>, \<br>    RUN+=<span class="hljs-string">&quot;/usr/bin/hdparm -B 254 -S 0 /dev/%k&quot;</span><br><br><br>71-nvidia.rules<br><span class="hljs-comment"># Enable runtime PM for NVIDIA VGA/3D controller devices on driver bind</span><br>ACTION==<span class="hljs-string">&quot;add|bind&quot;</span>, SUBSYSTEM==<span class="hljs-string">&quot;pci&quot;</span>, DRIVERS==<span class="hljs-string">&quot;nvidia&quot;</span>, \<br>    ATTR&#123;vendor&#125;==<span class="hljs-string">&quot;0x10de&quot;</span>, ATTR&#123;class&#125;==<span class="hljs-string">&quot;0x03[0-9]*&quot;</span>, \<br>    TEST==<span class="hljs-string">&quot;power/control&quot;</span>, ATTR&#123;power/control&#125;=<span class="hljs-string">&quot;auto&quot;</span><br><br><span class="hljs-comment"># Disable runtime PM for NVIDIA VGA/3D controller devices on driver unbind</span><br>ACTION==<span class="hljs-string">&quot;remove|unbind&quot;</span>, SUBSYSTEM==<span class="hljs-string">&quot;pci&quot;</span>, DRIVERS==<span class="hljs-string">&quot;nvidia&quot;</span>, \<br>    ATTR&#123;vendor&#125;==<span class="hljs-string">&quot;0x10de&quot;</span>, ATTR&#123;class&#125;==<span class="hljs-string">&quot;0x03[0-9]*&quot;</span>, \<br>    TEST==<span class="hljs-string">&quot;power/control&quot;</span>, ATTR&#123;power/control&#125;=<span class="hljs-string">&quot;on&quot;</span><br><br><br>80-ntfs3-by-default.rules<br>SUBSYSTEM==<span class="hljs-string">&quot;block&quot;</span>, TEST!=<span class="hljs-string">&quot;/usr/bin/ntfs-3g&quot;</span>, ENV&#123;ID_FS_TYPE&#125;==<span class="hljs-string">&quot;ntfs&quot;</span>, ENV&#123;ID_FS_TYPE&#125;=<span class="hljs-string">&quot;ntfs3&quot;</span><br><br><br>99-cpu-dma-latency.rules<br>DEVPATH==<span class="hljs-string">&quot;/devices/virtual/misc/cpu_dma_latency&quot;</span>, OWNER=<span class="hljs-string">&quot;root&quot;</span>, GROUP=<span class="hljs-string">&quot;audio&quot;</span>, MODE=<span class="hljs-string">&quot;0660&quot;</span><br><br><br>99-ntsync.rules<br>KERNEL==<span class="hljs-string">&quot;ntsync&quot;</span>, MODE=<span class="hljs-string">&quot;0644&quot;</span><br><br><span class="hljs-comment">## 应用新规则</span><br>&gt; udevadm control --reload <br>&gt; udevadm trigger<br></code></pre></td></tr></table></figure>
+<h1 id="Kernel"><a href="#Kernel" class="headerlink" title="Kernel"></a>Kernel</h1><p>自己裁剪内核、打Patch，也可以最大化自己的需求。建议是直接在<code>gentoo-kernel</code>的默认配置文件上修修改改，删一删自己不需要的<code>fs</code> <code>device</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">## 二进制内核</span><br>Wakin ~ &gt; systemd-analyze<br>Startup finished <span class="hljs-keyword">in</span> 12.052s (firmware) + 2.558s (loader) + 1.112s (kernel) + 2.379s (initrd) + 2.783s (userspace) = 20.885s<br>graphical.target reached after 2.687s <span class="hljs-keyword">in</span> userspace.<br><br><span class="hljs-comment">## 发行版内核</span><br>Wakin ~ <span class="hljs-comment"># systemd-analyze</span><br>Startup finished <span class="hljs-keyword">in</span> 4.045s (firmware) + 2.426s (loader) + 1.202s (kernel) + 2.335s (initrd) + 2.762s (userspace) = 12.772s<br>graphical.target reached after 2.650s <span class="hljs-keyword">in</span> userspace.<br><br><span class="hljs-comment">## 精简掉一些驱动 还是快了一点点 哈哈哈哈</span><br>Wakin ~ <span class="hljs-comment"># systemd-analyze</span><br>Startup finished <span class="hljs-keyword">in</span> 2.511s (firmware) + 2.490s (loader) + 1.086s (kernel) + 2.158s (initrd) + 2.604s (userspace) = 10.851s<br>graphical.target reached after 2.462s <span class="hljs-keyword">in</span> userspace.<br>Wakin ~ <span class="hljs-comment"># uname -r</span><br>6.13.2-WakinGentoo<br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -281,8 +286,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>kernelBuild</div>
-      <div>http://example.com/2025/02/06/kernelBuild/</div>
+      <div>Gentoo体验</div>
+      <div>http://example.com/2025/02/08/Gentoo的个人优化/</div>
     </div>
     <div class="license-meta">
       
@@ -294,7 +299,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年2月6日</div>
+          <div>2025年2月8日</div>
         </div>
       
       
@@ -326,18 +331,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/02/08/Gentoo%E7%9A%84%E4%B8%AA%E4%BA%BA%E4%BC%98%E5%8C%96/" title="Gentoo体验">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Gentoo体验</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/02/06/Ansible/" title="Ansible">
-                        <span class="hidden-mobile">Ansible</span>
+                      <a href="/2025/02/06/kernelBuild/" title="kernelBuild">
+                        <span class="hidden-mobile">kernelBuild</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
